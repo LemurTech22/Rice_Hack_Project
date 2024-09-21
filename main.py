@@ -128,7 +128,10 @@ while True:
 
     keys = pygame.key.get_pressed()
 
-    pygame.draw.rect(display, (255,255,255), (100-display_scroll[0], 100-display_scroll[1], 16, 16))
+    #pygame.draw.rect(display, (255,255,255), (100-display_scroll[0], 100-display_scroll[1], 16, 16))
+    mapImageTest = pygame.image.load('player_image.png')
+
+    display.blit(mapImageTest, (100-display_scroll[0], 100-display_scroll[1]))
 
     if keys[pygame.K_a]:
         display_scroll[0] -= 5
