@@ -1,12 +1,12 @@
 import pygame
-import game_data
+
 
 pygame.init()
 
 # Define constants
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
-PLATFORM_WIDTH = 100
+PLATFORM_WIDTH = 150
 PLATFORM_HEIGHT = 20
 PLAYER_WIDTH = 50
 PLAYER_HEIGHT = 50
@@ -17,19 +17,14 @@ PLAYER_COLOR = (255, 0, 0)
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 # Create the platform
-platform = pygame.Rect(350, 500, PLATFORM_WIDTH, PLATFORM_HEIGHT)
+platform = pygame.Rect(200, 500, PLATFORM_WIDTH, PLATFORM_HEIGHT)
 
 # Create the player
-player = pygame.Rect(game_data.player_pos[0],game_data.player_pos[i], PLAYER_WIDTH,PLAYER_HEIGHT)
+player = pygame.Rect(225, 450, PLAYER_WIDTH, PLAYER_HEIGHT)
 
 # Game loop
 running = True
 while running:
-    #Drawing the player
-    pygame.draw.rect(screen, PLAYER_COLOR, player)
-
-    #update player position
-    game_data.player_pos = (player.x, player.y)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
