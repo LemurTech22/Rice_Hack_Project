@@ -7,7 +7,10 @@ from map import TileKind, Map
 
 pygame.init()
 
-display = pygame.display.set_mode((800, 600))
+screen_width = 1200
+screen_height = 800
+
+display = pygame.display.set_mode((screen_width,screen_height))
 clock = pygame.time.Clock()
 
 player_walk_images = [pygame.image.load("./assets/player_walk_0.png"), pygame.image.load("./assets/player_walk_1.png"),
@@ -120,7 +123,7 @@ class SlimeEnemy:
 
 
 enemies = [SlimeEnemy(400, 300, 32, 30)]
-player = Player(400, 300, 32, 32)
+player = Player(screen_width/2, screen_height/2, 32, 32)
 
 display_scroll = [0,0]
 
@@ -157,6 +160,7 @@ while True:
 
     display.blit(mapImageTest, (-display_scroll[0], -display_scroll[1]))
 
+    pygame.draw.rect(display, (255,255,255), (100-display_scroll[0], 100-display_scroll[1], 100, 100),2)
     if keys[pygame.K_a]:
         display_scroll[0] -= 5
 
@@ -191,6 +195,6 @@ while True:
     for enemy in enemies:
         enemy.main(display)
 
-
+    
     clock.tick(60)
     pygame.display.update()
