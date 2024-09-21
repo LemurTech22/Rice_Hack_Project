@@ -61,21 +61,36 @@ class Player:
         self.moving_right = False
         self.moving_left = False
 
+
 class PlayerBullet:
-    def __init__(self, x, y, mouse_x, mouse_y):
+    def __init__(self, x, y, width, height, mouse_x, mouse_y):
         self.x = x
         self.y = y
+        self.width = width
+        self.height = height
         self.mouse_x = mouse_x
         self.mouse_y = mouse_y
         self.speed = 15
-        self.angle = math.atan2(y-mouse_y, x-mouse_x)
+        self.angle = math.atan2(y - mouse_y, x - mouse_x)
         self.x_vel = math.cos(self.angle) * self.speed
         self.y_vel = math.sin(self.angle) * self.speed
+        # Create hitbox (as a rectangle or bounding box for a circle)
+        self.hitbox = pygame.Rect(self.x, self.y, self.width, self.height)
+
     def main(self, display):
         self.x -= int(self.x_vel)
         self.y -= int(self.y_vel)
 
-        pygame.draw.circle(display, (0,0,0), (self.x+16, self.y+16), 5)
+        # Update hitbox position
+        self.hitbox.x = self.x
+        self.hitbox.y = self.y
+
+        # Draw the bullet as a circle
+        pygame.draw.circle(display, (0, 0, 0), (self.x + self.width // 2, self.y + self.height // 2), 5)
+
+        # Draw the hitbox for debugging purposes (optional)
+        pygame.draw.rect(display, (255, 0, 0), self.hitbox, 2)
+
 
 class SlimeEnemy:
     def __init__(self, x, y,width, height):
@@ -147,7 +162,8 @@ while True:
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
-                player_bullets.append(PlayerBullet(player.x, player.y, mouse_x, mouse_y))
+                player_bullets.append(
+                    PlayerBullet(player.x, player.y, 10, 10, mouse_x, mouse_y))  # Use 10x10 as the size of the bullet
 
     keys = pygame.key.get_pressed()
 
