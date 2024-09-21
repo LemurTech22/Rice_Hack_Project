@@ -23,6 +23,9 @@ class Player:
         self.animation_count = 0
         self.moving_right = False
         self.moving_left = False
+        #Health
+        self.hitbox = pygame.Rect(self.x, self.y, self.width, self.height)
+
     def handle_weapons(self, display):
         mouse_x, mouse_y = pygame.mouse.get_pos()
 
@@ -32,7 +35,6 @@ class Player:
         player_weapon_copy = pygame.transform.rotate(player_weapon, angle)
 
         display.blit(player_weapon_copy, (self.x+15-int(player_weapon_copy.get_width()/2), self.y+25-int(player_weapon_copy.get_height()/2)))
-
 
     def main(self, display):
         if self.animation_count + 1 >= 16:
@@ -46,6 +48,11 @@ class Player:
             display.blit(pygame.transform.scale(pygame.transform.flip(player_walk_images[self.animation_count//4], True, False), (32, 42)), (self.x, self.y))
         else:
             display.blit(pygame.transform.scale(player_walk_images[0], (32, 42)), (self.x, self.y))
+
+        self.hitbox.x = self.x
+        self.hitbox.y = self.y
+
+        pygame.draw.rect(display, (255,0,0), self.hitbox, 2)
 
         self.handle_weapons(display)
 
@@ -69,15 +76,18 @@ class PlayerBullet:
         pygame.draw.circle(display, (0,0,0), (self.x+16, self.y+16), 5)
 
 class SlimeEnemy:
-    def __init__(self, x, y):
+    def __init__(self, x, y,width, height):
         self.x = x
         self.y = y
         self.animation_images = [pygame.image.load("slime_animation_0.png"), pygame.image.load("slime_animation_1.png"),
         pygame.image.load("slime_animation_2.png"), pygame.image.load("slime_animation_3.png")]
         self.animation_count = 0
+        self.width = width
+        self.height = height
         self.reset_offset = 0
         self.offset_x = random.randrange(-300, 300)
         self.offset_y = random.randrange(-300, 300)
+        self.hitbox = pygame.Rect(self.x, self.y, self.width, self.height)
     def main(self, display):
         if self.animation_count + 1 == 16:
             self.animation_count = 0
@@ -99,12 +109,15 @@ class SlimeEnemy:
             self.y += 1
         elif player.y + self.offset_y < self.y-display_scroll[1]:
             self.y -= 1
+        self.hitbox.x = self.x
+        self.hitbox.y = self.y
 
+        pygame.draw.rect(display, (255, 0, 0), (self.hitbox.x - display_scroll[0], self.hitbox.y - display_scroll[1], self.width, self.height), 2)
         display.blit(pygame.transform.scale(self.animation_images[self.animation_count//4], (32, 30)), (self.x-display_scroll[0], self.y-display_scroll[1]))
 
 
 
-enemies = [SlimeEnemy(400, 300)]
+enemies = [SlimeEnemy(400, 300, 32, 30)]
 player = Player(400, 300, 32, 32)
 
 display_scroll = [0,0]
