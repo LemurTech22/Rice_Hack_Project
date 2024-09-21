@@ -92,7 +92,7 @@ class PlayerBullet:
         pygame.draw.circle(display, (0, 0, 0), (self.x + self.width // 2, self.y + self.height // 2), 5)
 
         # Draw the hitbox for debugging purposes (optional)
-        pygame.draw.rect(display, (255, 0, 0), self.hitbox, 2)
+        self.hitbox = pygame.draw.rect(display, (255, 0, 0), self.hitbox, 2)
 
 
 class SlimeEnemy:
@@ -138,7 +138,7 @@ class SlimeEnemy:
 
 
 
-enemies = SlimeEnemy(400, 300, 32, 30),SlimeEnemy(600, 300, 32, 30)
+enemies = [SlimeEnemy(400, 300, 32, 30),SlimeEnemy(600, 300, 32, 30)]
 
 player = Player(screen_width/2, screen_height/2, 32, 32)
 
@@ -211,12 +211,17 @@ while True:
     player.main(display)
     for bullet in player_bullets:
         bullet.main(display)
+        if bullet.hitbox.colliderect(enemy.hitbox):
+            print("Slime has been shot")
+            enemies.remove(enemy)
+            player_bullets.remove(bullet)
         
+    if enemies:
+        for enemy in enemies[:]:
+            enemy.main(display)
+            if player.hitbox.colliderect(enemy.hitbox):
+                print("Collision")
 
-    for enemy in enemies:       
-        enemy.main(display)
-        if player.hitbox.colliderect(enemy.hitbox):
-            print("Collision")
             
     
     clock.tick(60)
