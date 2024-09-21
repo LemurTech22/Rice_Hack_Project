@@ -131,13 +131,15 @@ class SlimeEnemy:
             self.y -= 1
         self.hitbox.x = self.x
         self.hitbox.y = self.y
+        
 
-        pygame.draw.rect(display, (255, 0, 0), (self.hitbox.x - display_scroll[0], self.hitbox.y - display_scroll[1], self.width, self.height), 2)
+        self.hitbox=pygame.draw.rect(display, (255, 0, 0), (self.hitbox.x - display_scroll[0], self.hitbox.y - display_scroll[1], self.width, self.height), 2)
         display.blit(pygame.transform.scale(self.animation_images[self.animation_count//4], (32, 30)), (self.x-display_scroll[0], self.y-display_scroll[1]))
 
 
 
-enemies = [SlimeEnemy(400, 300, 32, 30)]
+enemies = SlimeEnemy(400, 300, 32, 30),SlimeEnemy(600, 300, 32, 30)
+
 player = Player(screen_width/2, screen_height/2, 32, 32)
 
 display_scroll = [0,0]
@@ -158,6 +160,7 @@ while True:
 
     mouse_x, mouse_y = pygame.mouse.get_pos()
 
+        
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
@@ -177,6 +180,9 @@ while True:
     display.blit(mapImageTest, (-display_scroll[0], -display_scroll[1]))
 
     pygame.draw.rect(display, (255,255,255), (100-display_scroll[0], 100-display_scroll[1], 100, 100),2)
+
+    player.main(display)
+
     if keys[pygame.K_a]:
         display_scroll[0] -= 5
 
@@ -202,15 +208,16 @@ while True:
         for bullet in player_bullets:
             bullet.y -= 5
 
-
     player.main(display)
-
     for bullet in player_bullets:
         bullet.main(display)
+        
 
-    for enemy in enemies:
+    for enemy in enemies:       
         enemy.main(display)
-
+        if player.hitbox.colliderect(enemy.hitbox):
+            print("Collision")
+            
     
     clock.tick(60)
     pygame.display.update()
