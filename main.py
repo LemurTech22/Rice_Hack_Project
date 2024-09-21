@@ -105,7 +105,7 @@ class SlimeEnemy:
 
 
 
-enemies = [SlimeEnemy(400, 300)]
+enemies = [SlimeEnemy(450, 300)]
 player = Player(400, 300, 32, 32)
 
 display_scroll = [0,0]
