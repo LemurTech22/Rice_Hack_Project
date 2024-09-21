@@ -3,6 +3,7 @@ import sys
 import math
 import random
 import assets
+from map import TileKind, Map
 
 pygame.init()
 
@@ -125,7 +126,16 @@ display_scroll = [0,0]
 
 player_bullets = []
 
+TileKinds = [
+    TileKind("dirt", "./assets/dirt.png", False),
+    TileKind("grass", "./assets/grass.png", False),
+    TileKind("water", "./assets/water.png", False),
+    TileKind("wood", "./assets/wood.png", False)
+]
+
+# Game running loop
 while True:
+    map = Map("Levels/testmap.level", TileKinds, 32)
     display.fill((24,164,86))
 
     mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -141,10 +151,11 @@ while True:
 
     keys = pygame.key.get_pressed()
 
-    #pygame.draw.rect(display, (255,255,255), (100-display_scroll[0], 100-display_scroll[1], 16, 16))
-    mapImageTest = pygame.image.load('player_image.png')
+    map.draw(display, display_scroll[0], display_scroll[1])
 
-    display.blit(mapImageTest, (100-display_scroll[0], 100-display_scroll[1]))
+    mapImageTest = pygame.image.load('./assets/player_image.png')
+
+    display.blit(mapImageTest, (-display_scroll[0], -display_scroll[1]))
 
     if keys[pygame.K_a]:
         display_scroll[0] -= 5
