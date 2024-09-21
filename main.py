@@ -2,16 +2,17 @@ import pygame
 import sys
 import math
 import random
+import assets
 
 pygame.init()
 
 display = pygame.display.set_mode((800, 600))
 clock = pygame.time.Clock()
 
-player_walk_images = [pygame.image.load("player_walk_0.png"), pygame.image.load("player_walk_1.png"),
-pygame.image.load("player_walk_2.png"), pygame.image.load("player_walk_3.png")]
+player_walk_images = [pygame.image.load("./assets/player_walk_0.png"), pygame.image.load("./assets/player_walk_1.png"),
+pygame.image.load("./assets/player_walk_2.png"), pygame.image.load("./assets/player_walk_3.png")]
 
-player_weapon = pygame.image.load("shotgun.png").convert()
+player_weapon = pygame.image.load("./assets/shotgun.png").convert()
 player_weapon.set_colorkey((255,255,255))
 
 class Player:
@@ -72,8 +73,8 @@ class SlimeEnemy:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.animation_images = [pygame.image.load("slime_animation_0.png"), pygame.image.load("slime_animation_1.png"),
-        pygame.image.load("slime_animation_2.png"), pygame.image.load("slime_animation_3.png")]
+        self.animation_images = [pygame.image.load("./assets/slime_animation_0.png"), pygame.image.load("./assets/slime_animation_1.png"),
+        pygame.image.load("./assets/slime_animation_2.png"), pygame.image.load("./assets/slime_animation_3.png")]
         self.animation_count = 0
         self.reset_offset = 0
         self.offset_x = random.randrange(-300, 300)
