@@ -236,7 +236,7 @@ player_bullets = []
 spawn_timer = 0
 # Game running loop
 while True:
-    display.fill((24,164,86))
+    display.fill((0,0,0))
 
     mouse_x, mouse_y = pygame.mouse.get_pos()
 
@@ -254,32 +254,37 @@ while True:
     keys = pygame.key.get_pressed()
 
     mlback = pygame.image.load("./Levels/MLBACK.png")
-    display.blit(pygame.transform.scale(mlback,(1.5*1400,1.5*1000)), ((-screen_width/2)-display_scroll[0],(-screen_height/2)-display_scroll[1]))
+    display.blit(pygame.transform.scale(mlback,(2.13*screen_width,2.2*screen_height)), ((550-screen_width)-display_scroll[0],(350-screen_height)-display_scroll[1]))
     #display.blit(pygame.transform.scale(self.animation_images[self.animation_count//4], (32, 30)), (self.x-display_scroll[0], self.y-display_scroll[1]))
+
 
     player.main(display)
 
     if keys[pygame.K_a]:
-        display_scroll[0] -= 5
+        if display_scroll[0] > -screen_width:
+            display_scroll[0] -= 5
 
         player.moving_left = True
 
         for bullet in player_bullets:
             bullet.x += 5
     if keys[pygame.K_d]:
-        display_scroll[0] += 5
+        if display_scroll[0] < screen_width:
+            display_scroll[0] += 5
 
         player.moving_right = True
 
         for bullet in player_bullets:
             bullet.x -= 5
     if keys[pygame.K_w]:
-        display_scroll[1] -= 5
+        if display_scroll[1] > -screen_height:
+            display_scroll[1] -= 5
 
         for bullet in player_bullets:
             bullet.y += 5
     if keys[pygame.K_s]:
-        display_scroll[1] += 5
+        if display_scroll[1] < screen_height:
+            display_scroll[1] += 5
 
         for bullet in player_bullets:
             bullet.y -= 5
