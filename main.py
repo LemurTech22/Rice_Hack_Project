@@ -155,11 +155,13 @@ class PlayerBullet:
 
 
 class SlimeEnemy:
-    def __init__(self, x, y,width, height):
+    def __init__(self, x, y,width, height, enemyType):
         self.x = x
         self.y = y
-        self.animation_images = [pygame.image.load("./Characters/Enemies/Phantom1.png"), pygame.image.load("./Characters/Enemies/Phantom2.png"),
-        pygame.image.load("./Characters/Enemies/Phantom3.png"), pygame.image.load("./Characters/Enemies/Phantom4.png"), pygame.image.load("./Characters/Enemies/Phantom5.png")]
+        if enemyType:
+            self.animation_images = [pygame.image.load("./Characters/Enemies/Phantom1.png"), pygame.image.load("./Characters/Enemies/Phantom2.png"), pygame.image.load("./Characters/Enemies/Phantom3.png"), pygame.image.load("./Characters/Enemies/Phantom4.png"), pygame.image.load("./Characters/Enemies/Phantom5.png")]
+        else:
+            self.animation_images = [pygame.image.load("./Characters/Enemies/pixil-frame-0.png"), pygame.image.load("./Characters/Enemies/pixil-frame-1.png"), pygame.image.load("./Characters/Enemies/pixil-frame-2.png"), pygame.image.load("./Characters/Enemies/pixil-frame-3.png"), pygame.image.load("./Characters/Enemies/pixil-frame-1.png")]
         self.animation_count = 0
         self.width = width
         self.height = height
@@ -200,10 +202,10 @@ class SlimeEnemy:
 def start_new_round(current_round):
     number_of_enemies = current_round * 2  # Increase enemies with each round
     new_enemies = []
-    for _ in range(number_of_enemies):
+    for index in range(number_of_enemies):
         x = random.randint(0, screen_width - 50)
         y = random.randint(0, screen_height - 50)
-        new_enemies.append(SlimeEnemy(x, y, 50, 50))
+        new_enemies.append(SlimeEnemy(x, y, 50, 50, index%2==1))
     return new_enemies
 
 # Function to check if the round is complete (all enemies are defeated)
@@ -218,13 +220,13 @@ def display_round_info(display, current_round):
     round_text = font.render(f"Round: {current_round}", True, (0, 0, 0))
     display.blit(round_text, (screen_width - 150, 20))
 
-def spawn_Enemy():
+def spawn_Enemy(enType):
     x = random.randint(0,screen_width-50)
     y = random.randint(0,screen_height-50)
-    enemy = SlimeEnemy(x, y, 32, 30)
+    enemy = SlimeEnemy(x, y, 32, 30, enType)
     enemies.append(enemy)
 
-enemies = [SlimeEnemy(400, 300, 32, 30),SlimeEnemy(600, 300, 32, 30)]
+enemies = [SlimeEnemy(400, 300, 32, 30, True),SlimeEnemy(600, 300, 32, 30,False)]
 
 player = Player(screen_width/2, screen_height/2, 32, 32)
 current_round = 1
@@ -292,7 +294,7 @@ while True:
             bullet.y -= 5
     spawn_timer +=1
     if(spawn_timer > 200):
-        spawn_Enemy()
+        spawn_Enemy(bulletTime%3==1)
         spawn_timer=0
 
    # player.main(display)
