@@ -10,6 +10,8 @@ screen_width = 1200
 screen_height = 800
 unit_width = 45
 unit_height = 40
+playerWidth = 64
+playerHeight = 64
 # Colors
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
@@ -82,9 +84,12 @@ class Player:
         rel_x, rel_y = mouse_x - player.x, mouse_y - player.y
         angle = (180 / math.pi) * -math.atan2(rel_y, rel_x)
 
-        player_weapon_copy = pygame.transform.rotate(player_weapon, angle)
 
-        display.blit(player_weapon_copy, (self.x+15-int(player_weapon_copy.get_width()/2), self.y+25-int(player_weapon_copy.get_height()/2)))
+        playerWeaponAngle = pygame.transform.scale(player_weapon, (45,25))
+
+        player_weapon_copy = pygame.transform.rotate(playerWeaponAngle, angle)
+
+        display.blit(player_weapon_copy, (self.x+(self.width/2)-int(player_weapon_copy.get_width()/2), self.y+15+(self.height/2)-int(player_weapon_copy.get_height()/2)))
 
     def main(self, display):
         if self.animation_count + 1 >= 16:
@@ -93,11 +98,11 @@ class Player:
         self.animation_count += 1
 
         if self.moving_right:
-            display.blit(pygame.transform.scale(player_walk_images[self.animation_count//4], (32, 42)), (self.x, self.y))
+            display.blit(pygame.transform.scale(player_walk_images[self.animation_count//4], (self.width, self.height)), (self.x, self.y))
         elif self.moving_left:
-            display.blit(pygame.transform.scale(pygame.transform.flip(player_walk_images[self.animation_count//4], True, False), (32, 42)), (self.x, self.y))
+            display.blit(pygame.transform.scale(pygame.transform.flip(player_walk_images[self.animation_count//4], True, False), (self.width, self.height)), (self.x, self.y))
         else:
-            display.blit(pygame.transform.scale(player_walk_images[0], (32, 42)), (self.x, self.y))
+            display.blit(pygame.transform.scale(player_walk_images[self.animation_count//4], (self.width, self.height)), (self.x, self.y))
 
         self.hitbox.x = self.x
         self.hitbox.y = self.y
@@ -230,7 +235,7 @@ def spawn_Enemy(enType):
 
 enemies = [SlimeEnemy(400, 300, unit_width, unit_height, True),SlimeEnemy(600, 300, unit_width, unit_height,False)]
 
-player = Player(screen_width/2, screen_height/2, 32, 32)
+player = Player(screen_width/2, screen_height/2, playerWidth, playerHeight)
 current_round = 1
 enemies = start_new_round(current_round)
 max_rounds = 5
@@ -255,7 +260,7 @@ while True:
             pygame.quit()
 
     if bulletTime%20 == 1:
-        player_bullets.append(PlayerBullet(player.x+10, player.y+10, 10, 10, mouse_x, mouse_y))  # Use 10x10 as the size of the bullet
+        player_bullets.append(PlayerBullet(player.x+(player.width/2), player.y+(player.height/2), 10, 10, mouse_x, mouse_y))  # Use 10x10 as the size of the bullet
 
     keys = pygame.key.get_pressed()
 
