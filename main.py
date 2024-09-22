@@ -8,6 +8,8 @@ pygame.init()
 
 screen_width = 1200
 screen_height = 800
+unit_width = 45
+unit_height = 40
 # Colors
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
@@ -197,7 +199,7 @@ class SlimeEnemy:
 
 
         self.hitbox=pygame.draw.rect(display, (255, 0, 0), (self.hitbox.x - display_scroll[0], self.hitbox.y - display_scroll[1], self.width, self.height), 2)
-        display.blit(pygame.transform.scale(self.animation_images[self.animation_count//4], (32, 30)), (self.x-display_scroll[0], self.y-display_scroll[1]))
+        display.blit(pygame.transform.scale(self.animation_images[self.animation_count//4], (self.width, self.height)), (self.x-display_scroll[0], self.y-display_scroll[1]))
 
 def start_new_round(current_round):
     number_of_enemies = current_round * 2  # Increase enemies with each round
@@ -223,10 +225,10 @@ def display_round_info(display, current_round):
 def spawn_Enemy(enType):
     x = random.randint(0,screen_width-50)
     y = random.randint(0,screen_height-50)
-    enemy = SlimeEnemy(x, y, 32, 30, enType)
+    enemy = SlimeEnemy(x, y, unit_width, unit_height, enType)
     enemies.append(enemy)
 
-enemies = [SlimeEnemy(400, 300, 32, 30, True),SlimeEnemy(600, 300, 32, 30,False)]
+enemies = [SlimeEnemy(400, 300, unit_width, unit_height, True),SlimeEnemy(600, 300, unit_width, unit_height,False)]
 
 player = Player(screen_width/2, screen_height/2, 32, 32)
 current_round = 1
@@ -259,7 +261,7 @@ while True:
 
     mlback = pygame.image.load("./Levels/MLBACK.png")
     display.blit(pygame.transform.scale(mlback,(2.13*screen_width,2.2*screen_height)), ((550-screen_width)-display_scroll[0],(350-screen_height)-display_scroll[1]))
-    #display.blit(pygame.transform.scale(self.animation_images[self.animation_count//4], (32, 30)), (self.x-display_scroll[0], self.y-display_scroll[1]))
+    #display.blit(pygame.transform.scale(self.animation_images[self.animation_count//4], (unit_width, unit_height)), (self.x-display_scroll[0], self.y-display_scroll[1]))
 
 
     player.main(display)
