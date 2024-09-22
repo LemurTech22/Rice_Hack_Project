@@ -27,15 +27,15 @@ def start_screen():
     # Set up the font for the title
     title_font = pygame.font.Font(None, 74)
     instruction_font = pygame.font.Font(None, 36)
-    
+
     # Render the title and instruction text
     title_text = title_font.render("Your Game Title", True, WHITE)
     instruction_text = instruction_font.render("Press any key to start", True, WHITE)
-    
+
     # Center the text on the screen
     title_rect = title_text.get_rect(center=(screen_width // 2, screen_height // 2 - 50))
     instruction_rect = instruction_text.get_rect(center=(screen_width // 2, screen_height // 2 + 50))
-    
+
     # Display the start screen until a key is pressed
     while True:
         display.fill((0, 0, 0))  # Fill the screen with black
@@ -49,7 +49,7 @@ def start_screen():
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 return  # Exit the start screen function to start the game
-        
+
         # Update the display and control the frame rate
         pygame.display.update()
         clock.tick(60)
@@ -234,8 +234,12 @@ display_scroll = [0,0]
 round_over = False
 player_bullets = []
 spawn_timer = 0
+bulletTime=0
 # Game running loop
 while True:
+    if bulletTime >=30:
+        bulletTime = 1
+    bulletTime += 1
     display.fill((0,0,0))
 
     mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -246,10 +250,8 @@ while True:
             sys.exit()
             pygame.quit()
 
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:
-                player_bullets.append(
-                    PlayerBullet(player.x, player.y, 10, 10, mouse_x, mouse_y))  # Use 10x10 as the size of the bullet
+    if bulletTime%20 == 1:
+        player_bullets.append(PlayerBullet(player.x, player.y, 10, 10, mouse_x, mouse_y))  # Use 10x10 as the size of the bullet
 
     keys = pygame.key.get_pressed()
 
