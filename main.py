@@ -216,7 +216,7 @@ while True:
     keys = pygame.key.get_pressed()
 
     mlback = pygame.image.load("./Levels/MLBACK.png")
-    display.blit(pygame.transform.scale(mlback,(1.5*1400,1.5*1000)), (-display_scroll[0],-display_scroll[1]))
+    display.blit(pygame.transform.scale(mlback,(1.5*1400,1.5*1000)), ((-screen_width/2)-display_scroll[0],(-screen_height/2)-display_scroll[1]))
     #display.blit(pygame.transform.scale(self.animation_images[self.animation_count//4], (32, 30)), (self.x-display_scroll[0], self.y-display_scroll[1]))
 
     player.main(display)
