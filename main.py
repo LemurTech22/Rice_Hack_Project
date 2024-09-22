@@ -251,7 +251,7 @@ while True:
             pygame.quit()
 
     if bulletTime%20 == 1:
-        player_bullets.append(PlayerBullet(player.x, player.y, 10, 10, mouse_x, mouse_y))  # Use 10x10 as the size of the bullet
+        player_bullets.append(PlayerBullet(player.x+10, player.y+10, 10, 10, mouse_x, mouse_y))  # Use 10x10 as the size of the bullet
 
     keys = pygame.key.get_pressed()
 
