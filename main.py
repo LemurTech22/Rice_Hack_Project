@@ -9,7 +9,10 @@ pygame.init()
 
 screen_width = 1200
 screen_height = 800
-
+# Colors
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+BLUE = (0, 0, 255)
 display = pygame.display.set_mode((screen_width,screen_height))
 clock = pygame.time.Clock()
 
@@ -25,10 +28,12 @@ class Player:
         self.y = y
         self.width = width
         self.height = height
+        self.health = 3
+        self.immune = False
+        self.immune_timer = 0
         self.animation_count = 0
         self.moving_right = False
         self.moving_left = False
-        #Health
         self.hitbox = pygame.Rect(self.x, self.y, self.width, self.height)
 
     def handle_weapons(self, display):
@@ -64,7 +69,21 @@ class Player:
         self.moving_right = False
         self.moving_left = False
 
+    def take_hit(self):
+        if not self.immune:
+            self.health -= 1
+            self.immune = True
+            self.immune_timer = pygame.time.get_ticks()
 
+    def check_immunity(self):
+        if self.immune:
+            current_time = pygame.time.get_ticks()
+            if current_time - self.immune_timer > 4000:
+                self.immune = False
+
+    def draw_health_bar(self, display):
+        for i in range(self.health):
+            pygame.draw.rect(display, (255, 0, 0), (20 + i * 40, 20, 30, 30))
 class PlayerBullet:
     def __init__(self, x, y, width, height, mouse_x, mouse_y):
         self.x = x
@@ -108,6 +127,8 @@ class SlimeEnemy:
         self.offset_x = random.randrange(-300, 300)
         self.offset_y = random.randrange(-300, 300)
         self.hitbox = pygame.Rect(self.x, self.y, self.width, self.height)
+
+
     def main(self, display):
         if self.animation_count + 1 == 16:
             self.animation_count = 0
@@ -209,20 +230,32 @@ while True:
             bullet.y -= 5
 
     player.main(display)
-    for bullet in player_bullets:
+    for bullet in player_bullets[:]:
         bullet.main(display)
-        if bullet.hitbox.colliderect(enemy.hitbox):
-            print("Slime has been shot")
-            enemies.remove(enemy)
-            player_bullets.remove(bullet)
-        
+        if enemies:
+            for enemy in enemies[:]:
+                if bullet.hitbox.colliderect(enemy.hitbox):
+                    print("Slime has been shot")
+                    enemies.remove(enemy)
+                    if bullet in player_bullets:
+                        player_bullets.remove(bullet)
+                    break
+
     if enemies:
+        player.check_immunity()
         for enemy in enemies[:]:
             enemy.main(display)
             if player.hitbox.colliderect(enemy.hitbox):
+                player.take_hit()
                 print("Collision")
 
+
+    if player.health <= 0:
+        print("Game Over")
+        pygame.quit()
+        sys.exit()
+
             
-    
+    player.draw_health_bar(display)
     clock.tick(60)
     pygame.display.update()
