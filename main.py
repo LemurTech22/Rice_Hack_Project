@@ -22,6 +22,44 @@ player_weapon = pygame.image.load("./assets/shotgun.png").convert()
 player_weapon.set_colorkey((255,255,255))
 
 font = pygame.font.Font(None,36)
+
+def start_screen():
+    # Set up the font for the title
+    title_font = pygame.font.Font(None, 74)
+    instruction_font = pygame.font.Font(None, 36)
+    
+    # Render the title and instruction text
+    title_text = title_font.render("Your Game Title", True, WHITE)
+    instruction_text = instruction_font.render("Press any key to start", True, WHITE)
+    
+    # Center the text on the screen
+    title_rect = title_text.get_rect(center=(screen_width // 2, screen_height // 2 - 50))
+    instruction_rect = instruction_text.get_rect(center=(screen_width // 2, screen_height // 2 + 50))
+    
+    # Display the start screen until a key is pressed
+    while True:
+        display.fill((0, 0, 0))  # Fill the screen with black
+        display.blit(title_text, title_rect)  # Draw the title text
+        display.blit(instruction_text, instruction_rect)  # Draw the instruction text
+
+        # Check for key press event to start the game
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                return  # Exit the start screen function to start the game
+        
+        # Update the display and control the frame rate
+        pygame.display.update()
+        clock.tick(60)
+
+# Define the rest of your classes and game functions (Player, SlimeEnemy, etc.)
+
+# Call the start screen before the main game loop
+start_screen()
+
+
 class Player:
     def __init__(self, x, y, width, height):
         self.x = x
@@ -250,7 +288,7 @@ while True:
         spawn_Enemy()
         spawn_timer=0
 
-    player.main(display)
+   # player.main(display)
     for bullet in player_bullets[:]:
         bullet.main(display)
         if enemies:
