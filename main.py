@@ -158,8 +158,8 @@ class SlimeEnemy:
     def __init__(self, x, y,width, height):
         self.x = x
         self.y = y
-        self.animation_images = [pygame.image.load("./assets/slime_animation_0.png"), pygame.image.load("./assets/slime_animation_1.png"),
-        pygame.image.load("./assets/slime_animation_2.png"), pygame.image.load("./assets/slime_animation_3.png")]
+        self.animation_images = [pygame.image.load("./Characters/Enemies/Phantom1.png"), pygame.image.load("./Characters/Enemies/Phantom2.png"),
+        pygame.image.load("./Characters/Enemies/Phantom3.png"), pygame.image.load("./Characters/Enemies/Phantom4.png"), pygame.image.load("./Characters/Enemies/Phantom5.png")]
         self.animation_count = 0
         self.width = width
         self.height = height
