@@ -3,7 +3,6 @@ import sys
 import math
 import random
 import assets
-from map import TileKind, Map
 
 pygame.init()
 
@@ -152,7 +151,7 @@ class SlimeEnemy:
             self.y -= 1
         self.hitbox.x = self.x
         self.hitbox.y = self.y
-        
+
 
         self.hitbox=pygame.draw.rect(display, (255, 0, 0), (self.hitbox.x - display_scroll[0], self.hitbox.y - display_scroll[1], self.width, self.height), 2)
         display.blit(pygame.transform.scale(self.animation_images[self.animation_count//4], (32, 30)), (self.x-display_scroll[0], self.y-display_scroll[1]))
@@ -171,21 +170,13 @@ display_scroll = [0,0]
 
 player_bullets = []
 spawn_timer = 0
-TileKinds = [
-    TileKind("dirt", "./assets/dirt.png", False),
-    TileKind("grass", "./assets/grass.png", False),
-    TileKind("water", "./assets/water.png", False),
-    TileKind("wood", "./assets/wood.png", False)
-]
-
 # Game running loop
 while True:
-    map = Map("Levels/testmap.level", TileKinds, 32)
     display.fill((24,164,86))
 
     mouse_x, mouse_y = pygame.mouse.get_pos()
 
-        
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
@@ -198,13 +189,9 @@ while True:
 
     keys = pygame.key.get_pressed()
 
-    map.draw(display, display_scroll[0], display_scroll[1])
-
-    mapImageTest = pygame.image.load('./assets/player_image.png')
-
-    display.blit(mapImageTest, (-display_scroll[0], -display_scroll[1]))
-
-    pygame.draw.rect(display, (255,255,255), (100-display_scroll[0], 100-display_scroll[1], 100, 100),2)
+    mlback = pygame.image.load("./Levels/MLBACK.png")
+    display.blit(pygame.transform.scale(mlback,(1.5*1400,1.5*1000)), (-display_scroll[0],-display_scroll[1]))
+    #display.blit(pygame.transform.scale(self.animation_images[self.animation_count//4], (32, 30)), (self.x-display_scroll[0], self.y-display_scroll[1]))
 
     player.main(display)
 
@@ -255,7 +242,7 @@ while True:
                 enemies.remove(enemy)
                 player_bullets.remove(bullet)
                 break
-        
+
     if enemies:
         player.check_immunity()
         for enemy in enemies[:]:
@@ -270,7 +257,7 @@ while True:
         pygame.quit()
         sys.exit()
 
-            
+
     player.draw_health_bar(display)
     clock.tick(60)
     pygame.display.update()
