@@ -157,7 +157,11 @@ class SlimeEnemy:
         self.hitbox=pygame.draw.rect(display, (255, 0, 0), (self.hitbox.x - display_scroll[0], self.hitbox.y - display_scroll[1], self.width, self.height), 2)
         display.blit(pygame.transform.scale(self.animation_images[self.animation_count//4], (32, 30)), (self.x-display_scroll[0], self.y-display_scroll[1]))
 
-
+def spawn_Enemy():
+    x = random.randint(0,screen_width-50)
+    y = random.randint(0,screen_height-50)
+    enemy = SlimeEnemy(x, y, 32, 30)
+    enemies.append(enemy)
 
 enemies = [SlimeEnemy(400, 300, 32, 30),SlimeEnemy(600, 300, 32, 30)]
 
@@ -166,7 +170,7 @@ player = Player(screen_width/2, screen_height/2, 32, 32)
 display_scroll = [0,0]
 
 player_bullets = []
-
+spawn_timer = 0
 TileKinds = [
     TileKind("dirt", "./assets/dirt.png", False),
     TileKind("grass", "./assets/grass.png", False),
@@ -228,6 +232,10 @@ while True:
 
         for bullet in player_bullets:
             bullet.y -= 5
+    spawn_timer +=1
+    if(spawn_timer > 120):
+        spawn_Enemy()
+        spawn_timer=0
 
     player.main(display)
     for bullet in player_bullets[:]:
@@ -241,6 +249,13 @@ while True:
                         player_bullets.remove(bullet)
                     break
 
+        for enemy in enemies[:]:
+            if bullet.hitbox.colliderect(enemy.hitbox):
+                print("Slime has been shot")
+                enemies.remove(enemy)
+                player_bullets.remove(bullet)
+                break
+        
     if enemies:
         player.check_immunity()
         for enemy in enemies[:]:
