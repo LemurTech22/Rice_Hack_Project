@@ -22,6 +22,7 @@ pygame.image.load("./assets/player_walk_2.png"), pygame.image.load("./assets/pla
 player_weapon = pygame.image.load("./assets/shotgun.png").convert()
 player_weapon.set_colorkey((255,255,255))
 
+font = pygame.font.Font(None,36)
 class Player:
     def __init__(self, x, y, width, height):
         self.x = x
@@ -84,6 +85,8 @@ class Player:
     def draw_health_bar(self, display):
         for i in range(self.health):
             pygame.draw.rect(display, (255, 0, 0), (20 + i * 40, 20, 30, 30))
+
+
 class PlayerBullet:
     def __init__(self, x, y, width, height, mouse_x, mouse_y):
         self.x = x
@@ -152,10 +155,31 @@ class SlimeEnemy:
             self.y -= 1
         self.hitbox.x = self.x
         self.hitbox.y = self.y
-        
+
 
         self.hitbox=pygame.draw.rect(display, (255, 0, 0), (self.hitbox.x - display_scroll[0], self.hitbox.y - display_scroll[1], self.width, self.height), 2)
         display.blit(pygame.transform.scale(self.animation_images[self.animation_count//4], (32, 30)), (self.x-display_scroll[0], self.y-display_scroll[1]))
+
+def start_new_round(current_round):
+    number_of_enemies = current_round * 2  # Increase enemies with each round
+    new_enemies = []
+    for _ in range(number_of_enemies):
+        x = random.randint(0, screen_width - 50)
+        y = random.randint(0, screen_height - 50)
+        new_enemies.append(SlimeEnemy(x, y, 50, 50))
+    return new_enemies
+
+# Function to check if the round is complete (all enemies are defeated)
+def check_round_completion(enemies):
+    if len(enemies) == 0:  # All enemies defeated
+        return True
+    return False
+
+
+# Function to display the current round information
+def display_round_info(display, current_round):
+    round_text = font.render(f"Round: {current_round}", True, (0, 0, 0))
+    display.blit(round_text, (screen_width - 150, 20))
 
 def spawn_Enemy():
     x = random.randint(0,screen_width-50)
@@ -166,9 +190,11 @@ def spawn_Enemy():
 enemies = [SlimeEnemy(400, 300, 32, 30),SlimeEnemy(600, 300, 32, 30)]
 
 player = Player(screen_width/2, screen_height/2, 32, 32)
-
+current_round = 1
+enemies = start_new_round(current_round)
+max_rounds = 5
 display_scroll = [0,0]
-
+round_over = False
 player_bullets = []
 spawn_timer = 0
 TileKinds = [
@@ -185,7 +211,7 @@ while True:
 
     mouse_x, mouse_y = pygame.mouse.get_pos()
 
-        
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
@@ -233,7 +259,7 @@ while True:
         for bullet in player_bullets:
             bullet.y -= 5
     spawn_timer +=1
-    if(spawn_timer > 120):
+    if(spawn_timer > 200):
         spawn_Enemy()
         spawn_timer=0
 
@@ -249,13 +275,8 @@ while True:
                         player_bullets.remove(bullet)
                     break
 
-        for enemy in enemies[:]:
-            if bullet.hitbox.colliderect(enemy.hitbox):
-                print("Slime has been shot")
-                enemies.remove(enemy)
-                player_bullets.remove(bullet)
-                break
-        
+
+
     if enemies:
         player.check_immunity()
         for enemy in enemies[:]:
@@ -264,13 +285,26 @@ while True:
                 player.take_hit()
                 print("Collision")
 
+    display_round_info(display, current_round)
+
+    if not enemies and not round_over:
+        round_over = True
+        if current_round < max_rounds:
+            current_round += 1
+            pygame.time.delay(1000)  # Short delay before new round
+            enemies = start_new_round(current_round)
+            round_over = False
+        else:
+            print("All rounds completed! You win!")
+            pygame.quit()
+            sys.exit()
 
     if player.health <= 0:
         print("Game Over")
         pygame.quit()
         sys.exit()
 
-            
+
     player.draw_health_bar(display)
     clock.tick(60)
     pygame.display.update()
